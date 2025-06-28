@@ -21,9 +21,10 @@ class IndexView(generic.ListView):
         ]
 
 class DetailView(generic.DetailView):
+    model = Question
     template_name = "polls/detail.html"
 
-     def get_queryset(self):
+    def get_queryset(self):
         """
         Excludes any questions that aren't published yet.
         """
@@ -50,4 +51,4 @@ def vote(request, question_id):
     else:
         selected_choice.votes = F("votes") + 1
         selected_choice.save()
-        return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
+        return HttpResponseRedirect(reverse("polls:results", args=(question.id,))) 
