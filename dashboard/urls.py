@@ -1,5 +1,5 @@
 """
-URL configuration for mysite project.
+URL configuration for dashboard project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.2/topics/http/urls/
@@ -15,11 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
-from django.views.generic import RedirectView
+from django.urls import path, include
+from django.shortcuts import redirect
+
+def home_redirect(request):
+    """Redirigir la página principal al dashboard"""
+    return redirect('dashboard_app:dashboard')
 
 urlpatterns = [
-    path("", RedirectView.as_view(url="polls/", permanent=True)),
-    path("polls/", include("polls.urls")),
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
+    path('', home_redirect, name='home'),
+    path('auth/', include('auth_app.urls')),
+    path('dashboard/', include('dashboard_app.urls')),
 ]

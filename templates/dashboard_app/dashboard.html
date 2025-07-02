@@ -1,0 +1,271 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+            <div class="position-sticky pt-3">
+                <div class="text-center mb-4">
+                    <i class="fas fa-chart-line fa-2x text-white mb-2"></i>
+                    <h5 class="text-white">Dashboard</h5>
+                </div>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-tachometer-alt me-2"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-chart-bar me-2"></i>
+                            Reportes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-users me-2"></i>
+                            Usuarios
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-cog me-2"></i>
+                            Configuración
+                        </a>
+                    </li>
+                </ul>
+                
+                <hr class="text-white">
+                
+                <div class="text-center">
+                    <p class="text-white-50 small">Bienvenido, {{ user.username }}</p>
+                    <a href="{% url 'auth_app:logout' %}" class="btn btn-outline-light btn-sm">
+                        <i class="fas fa-sign-out-alt me-1"></i>Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">{{ page_title }}</h1>
+                <div class="btn-toolbar mb-2 mb-md-0">
+                    <div class="btn-group me-2">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button>
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Imprimir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                        Usuarios Totales</div>
+                                    <div class="h5 mb-0 font-weight-bold text-white" id="total-users">-</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-white-50"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                        Usuarios Activos</div>
+                                    <div class="h5 mb-0 font-weight-bold text-white" id="active-users">-</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-user-check fa-2x text-white-50"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                        Ingresos Totales</div>
+                                    <div class="h5 mb-0 font-weight-bold text-white" id="total-revenue">-</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-dollar-sign fa-2x text-white-50"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-white-50 text-uppercase mb-1">
+                                        Crecimiento Mensual</div>
+                                    <div class="h5 mb-0 font-weight-bold text-white" id="monthly-growth">-</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-chart-line fa-2x text-white-50"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row">
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Ventas Mensuales</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="salesChart" width="100%" height="40"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Ingresos por Categoría</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="revenueChart" width="100%" height="40"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="m-0 font-weight-bold text-primary">Usuarios Activos (Últimos 30 días)</h6>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="usersChart" width="100%" height="40"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Cargar estadísticas
+function loadStats() {
+    fetch('/dashboard/api/stats/')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('total-users').textContent = data.total_users.toLocaleString();
+            document.getElementById('active-users').textContent = data.active_users.toLocaleString();
+            document.getElementById('total-revenue').textContent = '$' + data.total_revenue.toLocaleString();
+            document.getElementById('monthly-growth').textContent = data.monthly_growth + '%';
+        })
+        .catch(error => console.error('Error loading stats:', error));
+}
+
+// Cargar gráfico de ventas
+function loadSalesChart() {
+    fetch('/dashboard/api/chart-data/?type=sales')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error loading sales chart:', error));
+}
+
+// Cargar gráfico de ingresos
+function loadRevenueChart() {
+    fetch('/dashboard/api/chart-data/?type=revenue')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error loading revenue chart:', error));
+}
+
+// Cargar gráfico de usuarios
+function loadUsersChart() {
+    fetch('/dashboard/api/chart-data/?type=users')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('usersChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        })
+        .catch(error => console.error('Error loading users chart:', error));
+}
+
+// Cargar todo cuando la página esté lista
+document.addEventListener('DOMContentLoaded', function() {
+    loadStats();
+    loadSalesChart();
+    loadRevenueChart();
+    loadUsersChart();
+});
+</script>
+{% endblock %} 
