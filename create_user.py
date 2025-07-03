@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """
 Script para crear el usuario "toto" con las credenciales especificadas
+Usando el sistema estándar de Django para encriptación de contraseñas
 """
 import os
 import sys
@@ -17,7 +18,7 @@ def create_toto_user():
     
     # Datos del usuario
     username = 'toto'
-    email = 'hflores@gmail.com'
+    email = 'hflores@velasresorts.com'
     password = 'test123'
     
     try:
@@ -32,40 +33,55 @@ def create_toto_user():
                 user.save()
                 print(f"Email actualizado a: {email}")
             
-            # Actualizar contraseña
+            # Actualizar contraseña usando el sistema estándar de Django
+            # set_password() automáticamente encripta la contraseña con pbkdf2_sha256
+            print(f"Actualizando contraseña para el usuario '{username}'...")
             user.set_password(password)
             user.save()
-            print(f"Contraseña actualizada para el usuario '{username}'")
+            print(f"✅ Contraseña actualizada usando encriptación estándar de Django")
             
         else:
-            # Crear nuevo usuario
+            # Crear nuevo usuario usando el sistema estándar de Django
+            # create_user() automáticamente encripta la contraseña
             user = CustomUser.objects.create_user(
                 username=username,
                 email=email,
-                password=password
+                password=password  # Django automáticamente encripta esto
             )
             print(f"Usuario '{username}' creado exitosamente")
-            print(f"Email: {email}")
-            print(f"Contraseña: {password}")
+            print(f"✅ Contraseña encriptada usando sistema estándar de Django")
         
-        print("\nCredenciales de acceso:")
+        # Verificar que la contraseña funciona correctamente
+        if user.check_password(password):
+            print(f"✅ Verificación exitosa: la contraseña '{password}' es válida")
+        else:
+            print(f"❌ Error: la contraseña '{password}' no es válida")
+            return False
+        
+        print("\n=== CREDENCIALES DE ACCESO ===")
         print(f"Email: {email}")
         print(f"Contraseña: {password}")
         print(f"Username: {username}")
+        print("\n=== FLUJO DE ENCRIPTACIÓN ===")
+        print("1. Usuario ingresa contraseña en texto plano")
+        print("2. Django encripta con pbkdf2_sha256 y la guarda")
+        print("3. Al validar, Django compara texto plano con hash")
+        print("4. Nunca se desencripta, solo se compara")
         
     except Exception as e:
-        print(f"Error al crear el usuario: {str(e)}")
+        print(f"Error al crear/actualizar el usuario: {str(e)}")
         return False
     
     return True
 
 if __name__ == '__main__':
-    print("Creando usuario 'toto'...")
+    print("=== CREANDO USUARIO 'toto' CON ENCRIPTACIÓN ESTÁNDAR ===")
     success = create_toto_user()
     
     if success:
         print("\n✅ Usuario creado/actualizado exitosamente!")
         print("Puedes usar estas credenciales para hacer login en el sistema.")
+        print("La contraseña está encriptada de forma segura en la base de datos.")
     else:
-        print("\n❌ Error al crear el usuario.")
+        print("\n❌ Error al crear/actualizar el usuario.")
         sys.exit(1) 

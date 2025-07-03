@@ -18,24 +18,11 @@ class CustomUser(AbstractUser):
     
     def set_password(self, raw_password):
         """Encripta la contraseña antes de guardarla"""
-        signer = Signer()
-        encrypted_password = signer.sign(raw_password)
-        super().set_password(encrypted_password)
+        super().set_password(raw_password)
     
     def check_password(self, raw_password):
         """Verifica la contraseña encriptada"""
-        try:
-            signer = Signer()
-            # Primero intentamos verificar si la contraseña actual está encriptada
-            if self.password.startswith('pbkdf2_sha256$'):
-                # Si es un hash de Django, usamos el método estándar
-                return super().check_password(raw_password)
-            else:
-                # Si es nuestra encriptación personalizada
-                decrypted_password = signer.unsign(self.password)
-                return raw_password == decrypted_password
-        except:
-            return False
+        return super().check_password(raw_password)
     
     def __str__(self):
         return self.username

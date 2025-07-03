@@ -2,6 +2,10 @@
 
 Un dashboard moderno y responsive que muestra gráficos de datos estáticos con sistema de autenticación personalizado usando Django y encriptación con `django.core.signing`.
 
+![Login](static/screenshot2.png)
+![Reset password](static/screenshot.png)
+![Dashboard](static/screenshot3.png)
+
 ## 🚀 Características
 
 - 🔐 **Autenticación personalizada** con encriptación usando `django.core.signing`
