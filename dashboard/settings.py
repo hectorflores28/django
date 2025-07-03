@@ -134,3 +134,12 @@ AUTH_USER_MODEL = 'auth_app.CustomUser'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/dashboard/'
 LOGOUT_REDIRECT_URL = '/login/'
+
+# Email configuration for password reset
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Cambiar según tu proveedor de email
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'tu-email@gmail.com'  # Cambiar por tu email
+EMAIL_HOST_PASSWORD = 'tu-password-de-app'  # Cambiar por tu contraseña de aplicación
+DEFAULT_FROM_EMAIL = 'tu-email@gmail.com'  # Cambiar por tu email
